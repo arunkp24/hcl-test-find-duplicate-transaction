@@ -1,5 +1,13 @@
 export interface Transaction {
-  // TODO
+  id: number, 
+  source: string, 
+  target: string, 
+  amount: number, 
+  description: string
+}
+
+export interface Lookup {
+    [key: string]: Transaction
 }
 
 /**
@@ -28,22 +36,23 @@ export interface Transaction {
  * @returns {Transaction[]} List of duplicate transactions
  */
 export function findDuplicateTransactions(transactions: Transaction[]): Transaction[] {
-  // TODO
-  // This has been done just to make the test pass for now.
-  return [
-    {
-      id: 1,
-      source: 'A',
-      target: 'B',
-      amount: 300,
-      description: 'tikkie'
-    },
-    {
-      id: 3,
-      source: 'A',
-      target: 'B',
-      amount: 300,
-      description: 'tikkie'
+    let duplicateTransactions: Transaction[] = [];
+    let lookupObj: Lookup = {};
+
+    for (let transaction of transactions) {
+        let transKey = getKey(transaction);
+        lookupObj[transKey] ? duplicateTransactions.push(lookupObj[transKey], transaction) : lookupObj[transKey] = transaction;
     }
-  ];
+
+    return duplicateTransactions;
+}
+/**
+ * 
+ * @param {Transaction} transaction 
+ * @returns {string} transaction key
+ */
+function getKey(transaction: Transaction): string {
+    let delimitter: string = '=&=';
+    let transKey = transaction.source + delimitter + transaction.target + delimitter + transaction.amount + delimitter + transaction.description;
+    return transKey.toLowerCase();
 }

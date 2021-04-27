@@ -6,7 +6,7 @@ export interface Transaction {
   description: string
 }
 
-export interface Lookup {
+export interface LookupTransaction {
     [key: string]: Transaction
 }
 
@@ -37,7 +37,7 @@ export interface Lookup {
  */
 export function findDuplicateTransactions(transactions: Transaction[]): Transaction[] {
     let duplicateTransactions: Transaction[] = [];
-    let lookupObj: Lookup = {};
+    let lookupObj: LookupTransaction = {};
 
     for (let transaction of transactions) {
         let transKey = getKey(transaction);

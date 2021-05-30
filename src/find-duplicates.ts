@@ -7,7 +7,7 @@ export interface Transaction {
 }
 
 export interface LookupTransaction {
-    [key: string]: Transaction
+    [key: string]: number
 }
 
 /**
@@ -36,15 +36,15 @@ export interface LookupTransaction {
  * @returns {Transaction[]} List of duplicate transactions
  */
 export function findDuplicateTransactions(transactions: Transaction[]): Transaction[] {
-    let duplicateTransactions: Transaction[] = [];
-    let lookupObj: LookupTransaction = {};
+    // There was a major glitch in the previous version. 
+    // Thank you for pointing out. Hope this fixes the issue. 
+    const lookupObj = transactions.reduce((acc, ele) => {
+        let transKey = getKey(ele);
+        acc[transKey] = ++acc[transKey] || 0;
+        return acc;
+    }, {} as LookupTransaction);
 
-    for (let transaction of transactions) {
-        let transKey = getKey(transaction);
-        lookupObj[transKey] ? duplicateTransactions.push(lookupObj[transKey], transaction) : lookupObj[transKey] = transaction;
-    }
-
-    return duplicateTransactions;
+    return transactions.filter(transaction => lookupObj[getKey(transaction)]);
 }
 /**
  * 
